@@ -69,12 +69,13 @@ app.put('/students/:id', async(req, res) => {
             {id, name, age, 
                 scholarship: { 
                     merit, 
-                    other 
+                    other
                 }
             }, 
             { 
                 new: true, 
-                runValidators: true 
+                runValidators: true,
+                overwrite: true 
             }
         )
         res.send({ massage: 'Successfully updated the data.' })
@@ -84,6 +85,40 @@ app.put('/students/:id', async(req, res) => {
     }
 })
 
+class newData {
+    constructor() {}
+    setProperty(key, value) {
+        if (key !== 'merit' && key !== 'other') {
+            this[key] = value
+        } else {
+            this[`scholarship.${key}`] = value
+        }
+    }
+}
+
+app.patch('/students/:id', async(req, res) => {
+    let { id } = req.params
+    let newObject = new newData()
+    for (let property in req.body) {
+        newObject.setProperty(property, req.body[property])
+    }
+    try {
+        let d = await Student.findOneAndUpdate(
+            { id }, 
+            newObject,
+            { 
+                new: true, 
+                runValidators: true 
+            }
+        )
+        console.log(d)
+        res.send({ massage: 'Successfully updated the data.' })
+    } catch(e) {
+        res.status(404)
+        res.send(e)
+    }
+})
+ 
 app.delete('/students/delete/:id', (req, res) => {
     let { id } = req.params
     Student.deleteOne({ id }).then(meg => {
