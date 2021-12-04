@@ -21,21 +21,13 @@ mongoose
         console.log(err)
     })
 
-app.get('/', (req, res) => {
-    res.send('This is homepage.')
-})
-
 app.get('/students', async (req, res) => {
     try {
         let data = await Student.find()
-        res.render('students.ejs', { data })
+        res.send(data)
     } catch {
-        res.send('Error with finding data.')
+        res.send({ message: 'Error with finding data.' })
     }
-})
-
-app.get('/students/insert', (req, res) => {
-    res.render('studnetInsert.ejs')
 })
 
 app.get('/students/:id', async(req, res) => {
