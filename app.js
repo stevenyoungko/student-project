@@ -47,19 +47,17 @@ app.get('/students/:id', async(req, res) => {
     }
 })
 
-app.post('/students/insert', (req, res) => {
+app.post('/students', (req, res) => {
     let { id, name, age, merit, other } = req.body
     let newStudent = new Stduent({ id, name, age, scholarship: { merit, other }})
     newStudent
         .save()
         .then(() => {
-            console.log('Student accepted.')
-            res.render('accept.ejs')
+            res.send({ message: 'Successfully post a new studnet.' })
         })
         .catch((e) => {
-            console.log('Student not accepted.')
-            console.log(e)
-            res.render('reject.ejs')
+            res.status(404)
+            res.send(e)
         })
 })
 
