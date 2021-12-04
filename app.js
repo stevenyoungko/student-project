@@ -61,21 +61,7 @@ app.post('/students', (req, res) => {
         })
 })
 
-app.get('/students/edit/:id', async(req, res) => {
-    let { id } = req.params
-    try {
-        let data = await Student.findOne({ id })
-        if (data !== null) {
-            res.render('edit.ejs', { data })   
-        } else {
-            res.send('Cannot find student.')
-        }
-    } catch {
-        res.send('Error!')
-    }
-})
-
-app.put('/students/edit/:id', async(req, res) => {
+app.put('/students/:id', async(req, res) => {
     let { id, name, age, merit, other } = req.body
     try {
         let d = await Student.findOneAndUpdate(
@@ -91,9 +77,10 @@ app.put('/students/edit/:id', async(req, res) => {
                 runValidators: true 
             }
         )
-        res.redirect(`/students/${id}`)
-    } catch {
-        res.render('reject.ejs')
+        res.send({ massage: 'Successfully updated the data.' })
+    } catch(e) {
+        res.status(404)
+        res.send(e)
     }
 })
 
