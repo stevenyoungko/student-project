@@ -130,6 +130,16 @@ app.delete('/students/delete/:id', (req, res) => {
     })
 })
 
+app.delete('/students/delete', (req, res) => {
+    Student.deleteMany({}).then(meg => {
+        console.log(meg)
+        res.send('Deleted all data successfully.')
+    }).catch(e => {
+        console.log(e)
+        res.send('Delete fail!')
+    })
+})
+
 app.get('/*', (req, res) => {
     res.status(404)
     res.send('Not allow!')
